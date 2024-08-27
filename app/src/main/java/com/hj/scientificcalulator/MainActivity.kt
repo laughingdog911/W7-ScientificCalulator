@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.hj.scientificcalulator.databinding.ActivityMainBinding
+import net.objecthunter.exp4j.ExpressionBuilder
 
 class MainActivity: AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -43,38 +44,8 @@ class MainActivity: AppCompatActivity() {
     }
 
     private fun calc(){
-        var op: Char? = null
-
-        for(o in operatorList){
-            if(expression.value!!.contains(o)){
-                op = o
-                break
-            }
-        }
-
-        if(op != null){
-            val expSplit = expression.value!!.split(op)
-
-            if(expSplit.size == 2 && expSplit[1] != ""){
-                when(op){
-                    '+' -> result.value = (expSplit[0].toFloat() + expSplit[1].toFloat()).toString()
-                    '-' -> result.value = (expSplit[0].toFloat() - expSplit[1].toFloat()).toString()
-                    '*' -> result.value = (expSplit[0].toFloat() * expSplit[1].toFloat()).toString()
-                    '/' -> {
-                        if(expSplit[1].toFloat() != 0.0f){
-                            result.value = (expSplit[0].toFloat() / expSplit[1].toFloat()).toString()
-                        } else{
-                            result.value = "0"
-                            expression.value = ""
-                            Toast.makeText(this, "0으로 나눌 수 없습니다.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    '%' -> result.value = (expSplit[0].toFloat() % expSplit[1].toFloat()).toString()
-                }
-
-                expression.value = result.value
-            }
-        }
+        val expressionBuilder = ExpressionBuilder("${expression.value}").build()
+        val resultValue = expressionBuilder.evaluate()
     }
 
     fun onClick(v: View){
@@ -129,6 +100,13 @@ class MainActivity: AppCompatActivity() {
                 calc()
             }
 
+            binding.btnOpenParenthesis -> {
+                //TODO: add to stack
+            }
+
+            binding.btnCloseParenthesis -> {
+                //TODO: add to stack
+            }
             else -> {
                 if(expression.value!!.isNotEmpty()){
                     for(op in operatorList){

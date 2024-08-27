@@ -4,4 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="GreyGreen">#BBC4BB</color>
     <color name="DeepGreen">#283D3B</color>
+    <color name="Mint">#03CEA4</color>
+    <color name="SeaGreen">#388659</color>
+    <color name="CambridgeBlue">#6B9C97</color>
+    <color name="Transparent">#00FFFFFF</color>
 </resources>
