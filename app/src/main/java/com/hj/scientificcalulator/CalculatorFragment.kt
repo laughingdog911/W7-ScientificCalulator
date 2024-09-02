@@ -22,9 +22,12 @@ class CalculatorFragment(): Fragment(){
     private lateinit var binding: FragmentCalculatorBinding
 
     private val operatorList = listOf('%', '/', '*', '-', '+')
+    private var parentheses = ArrayDeque<String>()
 
     var result = MutableLiveData("0")
     var expression = MutableLiveData("")
+
+    private val last = expression.value?.get(expression.value!!.lastIndex)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +42,7 @@ class CalculatorFragment(): Fragment(){
 
     private fun opBtnClicked(op: Char){
         if(expression.value!!.isNotEmpty()){
-            val last = expression.value?.get(expression.value!!.lastIndex)
+
 
             for(o in operatorList){
                 if(last == o){
@@ -54,20 +57,29 @@ class CalculatorFragment(): Fragment(){
     }
 
     private fun parenBtnClicked(p: Char){                       //새로운 함수 추가:
-        var parentheses = ArrayDeque<String>()
+        if(parentheses.isEmpty()) {                             //만약 괄호 배열이 비었으면:
 
-        for (p in parentheses){
-            if(p == "("){
-                parentheses.addFirst("(")
-                expression.value = "${expression.value!!}${p}"
-            }else if (p == ")"){
+            for (p in parentheses) {
+                if (p == "(") {                                 //이게 밑에도 반복되어서 좀..그르네?
+                    parentheses.addFirst("(")
+                    expression.value = "${expression.value!!}${p}"
+                } else if (p == ")") {
+                    //Toast.makeText(context as MainActivity, "Wrong Equation.", Toast.LENGTH_SHORT).show()
+                    //무시....를 어떻게 하지? 그냥 냅두...?
+                }
+            }
+        }else {                                                  //괄호 배열에 (이 아직 있다면:
+            for (p in parentheses) {
+                if (p == "(") {                                 //괄호 (은 그냥 추가 가능.
+                    parentheses.addFirst("(")
+                    expression.value = "${expression.value!!}${p}"
+                }else if (p == ")")                             //괄호 )는 head 제거.
                 parentheses.removeFirstOrNull()
                 expression.value = "${expression.value!!}${p}"
             }
-
         }
-
     }
+
 
     fun onClick(v: View){
         when(v){
@@ -117,11 +129,18 @@ class CalculatorFragment(): Fragment(){
             }
 
             binding.btnEqual -> {
-                val expressionBuilder = ExpressionBuilder("${expression.value}").build() //여기에다가 calc() 함수 넣었고,
+                val expressionBuilder = ExpressionBuilder("${expression.value}").build() //여기에다가 calc() 함수 넣었는데 뺄까 다시
+
+                if(parentheses.isNotEmpty()){
+                    Toast.makeText(context as MainActivity, "Incorrect Input.", Toast.LENGTH_SHORT).show() //Toast도 함수 만들까,
+                }else if(expression.value!!.isNotEmpty() && expression.value!![expression.value!!.length - 1] in operatorList){
+                    Toast.makeText(context as MainActivity, "Incorrect Input.", Toast.LENGTH_SHORT).show()
+                }
+
                 result.value = expressionBuilder.evaluate().toString()
             }
 
-            binding.btnOpenParenthesis -> {                                                       //여기에다가 각각 (, ) 넣었고
+            binding.btnOpenParenthesis -> {
                 parenBtnClicked('(')
             }
 
