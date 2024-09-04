@@ -1,4 +1,6 @@
 package com.hj.scientificcalulator.Models
 
-class HistoryDataModel {
-}
+data class HistoryDataModel(
+    val expression: String,
+    val result: String
+)

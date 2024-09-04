@@ -3,41 +3,66 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="view"
             type="com.hj.scientificcalulator.UI.HistoryFragment" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/HistoryView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
-        android:orientation="horizontal"
-        >
+        android:layout_height="match_parent"
+        android:background="@color/black">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_back"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_gravity="start|fill_horizontal"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_baseline_arrow_back_ios_new_24"
-            app:iconTint="@color/DeepGreen"
-            android:backgroundTint="@color/CambridgeBlue"
-            android:onClick="@{(v) -> view.onClick(v)}"
-            />
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_bin"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_gravity="end|fill_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/baseline_delete_24"
-            app:iconTint="@color/DeepGreen"
-            android:backgroundTint="@color/CambridgeBlue"
-            android:onClick="@{(v) -> view.onClick(v)}"
-            />
-    </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:orientation="horizontal"
+                >
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_back"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|fill_horizontal"
+                    android:backgroundTint="@color/CambridgeBlue"
+                    android:onClick="@{(v) -> view.onClick(v)}"
+                    app:icon="@drawable/ic_baseline_arrow_back_ios_new_24"
+                    app:iconTint="@color/DeepGreen" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_bin"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:backgroundTint="@color/CambridgeBlue"
+                    android:onClick="@{(v) -> view.onClick(v)}"
+                    app:icon="@drawable/baseline_delete_24"
+                    app:iconTint="@color/DeepGreen" />
+
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

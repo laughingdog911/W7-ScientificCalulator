@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.hj.scientificcalulator.Models.HistoryListAdapter
 import com.hj.scientificcalulator.R
@@ -36,4 +37,16 @@ class HistoryFragment() : Fragment() {
 
     }
 
+    fun onClick(v: View){
+
+        when (v) {
+            binding.btnBin -> {
+                adapter.clear()
+            }
+
+            binding.btnBack -> {
+                (activity as MainActivity).supportFragmentManager.popBackStack()
+            }
+        }
+    }
 }
