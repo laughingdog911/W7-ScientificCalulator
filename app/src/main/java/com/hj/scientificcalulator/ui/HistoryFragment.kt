@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hj.scientificcalulator.Helper.HistoryHelper
 import com.hj.scientificcalulator.Models.HistoryListAdapter
 import com.hj.scientificcalulator.R
 import com.hj.scientificcalulator.databinding.FragmentHistoryBinding
@@ -16,15 +17,19 @@ class HistoryFragment() : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var adapter: HistoryListAdapter
 
+    private val historyHelper = HistoryHelper()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
         binding.lifecycleOwner = this
         binding.view = this
+
+        inHistoryRecyclerView()
 
         return binding.root
     }
@@ -40,7 +45,9 @@ class HistoryFragment() : Fragment() {
 
         when (v) {
             binding.btnBin -> {
-//                adapter.
+                historyHelper.historyList.value?.let{
+                    it.clear()
+                }
             }
 
             binding.btnBack -> {
