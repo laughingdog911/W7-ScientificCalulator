@@ -1,4 +1,4 @@
-package com.hj.scientificcalulator.UI
+package com.hj.scientificcalulator.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

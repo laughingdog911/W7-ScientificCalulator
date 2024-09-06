@@ -3,14 +3,14 @@
     <data>
         <variable
             name="view"
-            type="com.hj.scientificcalulator.UI.MainActivity" />
+            type="com.hj.scientificcalulator.ui.MainActivity" />
     </data>
 
     <LinearLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".UI.MainActivity">
+        tools:context=".ui.MainActivity">
 
         <FrameLayout
             android:layout_width="match_parent"

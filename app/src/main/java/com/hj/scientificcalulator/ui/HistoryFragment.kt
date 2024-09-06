@@ -1,4 +1,4 @@
-package com.hj.scientificcalulator.UI
+package com.hj.scientificcalulator.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.hj.scientificcalulator.Models.HistoryListAdapter
 import com.hj.scientificcalulator.R
 import com.hj.scientificcalulator.databinding.FragmentHistoryBinding
@@ -41,7 +40,7 @@ class HistoryFragment() : Fragment() {
 
         when (v) {
             binding.btnBin -> {
-                adapter.clear()
+//                adapter.
             }
 
             binding.btnBack -> {

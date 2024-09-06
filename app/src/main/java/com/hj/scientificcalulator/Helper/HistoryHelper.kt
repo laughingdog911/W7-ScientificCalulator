@@ -10,4 +10,8 @@ class HistoryHelper {
             value = mutableListOf()
         }
     }
+
+    fun addHistory(expression: String, result: String){
+        historyList.value?.add(HistoryDataModel(expression, result))
+    }
 }

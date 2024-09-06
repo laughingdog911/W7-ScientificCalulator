@@ -5,10 +5,11 @@
     <data>
         <variable
             name="view"
-            type="com.hj.scientificcalulator.UI.CalculatorFragment" />
+            type="com.hj.scientificcalulator.ui.CalculatorFragment" />
     </data>
 
     <LinearLayout
+        android:id="@+id/calculatorView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
@@ -32,7 +33,7 @@
                 android:onClick="@{(v) -> view.onClick(v)}"
                 app:icon="@drawable/baseline_history_24"
                 app:iconTint="@color/GreyGreen"
-                app:iconSize="40dp"
+                app:iconSize="24dp"
                 />
         </RelativeLayout>
 
@@ -52,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:text="@={view.expression}"
-                android:textColor="@color/DeepGreen"
+                android:textColor="@color/CambridgeBlue"
                 android:textSize="24sp" />
 
             <TextView

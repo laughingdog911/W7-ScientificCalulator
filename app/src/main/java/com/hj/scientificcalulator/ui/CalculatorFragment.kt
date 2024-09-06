@@ -1,4 +1,4 @@
-package com.hj.scientificcalulator.UI
+package com.hj.scientificcalulator.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.button.MaterialButton
+import com.hj.scientificcalulator.Helper.CalcHelper
+import com.hj.scientificcalulator.Helper.HistoryHelper
 import com.hj.scientificcalulator.R
 import com.hj.scientificcalulator.databinding.FragmentCalculatorBinding
 import net.objecthunter.exp4j.ExpressionBuilder
@@ -16,8 +18,8 @@ import net.objecthunter.exp4j.ExpressionBuilder
 class CalculatorFragment(): Fragment(){
     private lateinit var binding: FragmentCalculatorBinding
 
-    private val operatorList = listOf('/', '*', '-', '+')
-    private var parentheses = ArrayDeque<String>()
+    private val calcHelper = CalcHelper()
+    private val historyHelper = HistoryHelper()
 
     var result = MutableLiveData("0")
     var expression = MutableLiveData("")
@@ -33,54 +35,55 @@ class CalculatorFragment(): Fragment(){
         return binding.root
     }
 
-    private fun showToast(text: String){
+    fun showToast(text: String){
         Toast.makeText(context as MainActivity, text, Toast.LENGTH_SHORT).show()
     }
 
     private fun getLast(text: String): Char? {
         return if (expression.value!!.isNotEmpty()) {
             expression.value?.get(expression.value!!.lastIndex)
-        } else
-        TODO("Provide the return value")
+        } else {
+            null
+        }
     }
 
     private fun opBtnClicked(op: Char){
+
         if(expression.value!!.isNotEmpty()){
-            for(o in operatorList){
+            for(o in calcHelper.operatorList){
                 if(getLast(expression.value!!) == o){
                     expression.value = expression.value!!.dropLast(1)
                     break
                 }
             }
-            expression.value = "${expression.value!!}${op}"
+            expression.value = "${expression.value!!}$op"
             result.value = "0"
         } else{
-            expression.value = "0${op}"
+            expression.value = "0$op"
         }
     }
 
     private fun parenBtnClicked(p: Char){                       //새로운 함수 추가:
-        for(p in parentheses){
-            if(p == "(" && expression.value!![expression.value!!.length - 1] in operatorList){
-                parentheses.addFirst("(")
+        for(p in calcHelper.parentheses){
+            if(p == "(" && expression.value!![expression.value!!.length - 1] in calcHelper.operatorList){
                 expression.value = "${expression.value!!}${p}"
             }else if(p == ")"){
-                if(parentheses.isNotEmpty()){
-                    parentheses.removeFirstOrNull()
+                if(calcHelper.parentheses.isNotEmpty()){
                     expression.value = "${expression.value!!}${p}"
+                }else {
+                    showToast("Incorrect Input.")
                 }
             }
         }
     }
 
     private fun calc(){
-        if(parentheses.isNotEmpty()){
-            showToast("Incorrect Input.")
-        }else if(expression.value!!.isNotEmpty() && expression.value!![expression.value!!.length - 1] in operatorList){
-            showToast("Incorrect Input.")
+        if(expression.value!!.isNotEmpty() && expression.value!![expression.value!!.length - 1] in calcHelper.operatorList){
+            showToast("Incomplete Input.")
         }else if (expression.value!!.contains("/0")){
             showToast("Incorrect Input.")
         }else{
+            historyHelper.addHistory(expression.toString(), result.toString())
             expression.value = "${expression.value!!}${"="} "
             val expressionBuilder = ExpressionBuilder("${expression.value}").build()
             result.value = expressionBuilder.evaluate().toString()
@@ -90,6 +93,12 @@ class CalculatorFragment(): Fragment(){
 
     fun onClick(v: View){
         when(v){
+            binding.btnHistory -> {
+                val transactionManager =
+                    (activity as MainActivity).supportFragmentManager.beginTransaction()
+                transactionManager.replace(R.id.calculatorView, HistoryFragment()).addToBackStack("").commit()
+            }
+
             binding.btnAc -> {
                 expression.value = ""
                 result.value = "0"
@@ -106,8 +115,14 @@ class CalculatorFragment(): Fragment(){
             }
 
 
-            binding.btnDivide, binding.btnMultiply, binding.btnMinus, binding.btnPlus -> {
+            binding.btnMinus, binding.btnPlus -> {
                 opBtnClicked((v as MaterialButton).text[0])
+            }
+            binding.btnDivide ->{
+                opBtnClicked('÷')
+            }
+            binding.btnMultiply ->{
+                opBtnClicked('×')
             }
 
             binding.btnPoint -> {
@@ -124,17 +139,19 @@ class CalculatorFragment(): Fragment(){
                 calc()
             }
 
-            binding.btnOpenParenthesis -> {
-                parenBtnClicked('(')
-            }
-
-            binding.btnCloseParenthesis -> {
-                parenBtnClicked(')')
-            }
+//            binding.btnOpenParenthesis -> {
+//                parenBtnClicked('(')
+//                calcHelper.parenOperation('(')
+//            }
+//
+//            binding.btnCloseParenthesis -> {
+//                parenBtnClicked(')')
+//                calcHelper.parenOperation(')')
+//            }
 
             else -> {
                 if(expression.value!!.isNotEmpty()){
-                    for(op in operatorList){
+                    for(op in calcHelper.operatorList){
                         if(expression.value!![expression.value!!.length-1] == op){
                             result.value = "0"
                         }

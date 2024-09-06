@@ -3,7 +3,7 @@
     <data>
         <variable
             name="view"
-            type="com.hj.scientificcalulator.UI.HistoryFragment" />
+            type="com.hj.scientificcalulator.ui.HistoryFragment" />
     </data>
 
     <androidx.cardview.widget.CardView
