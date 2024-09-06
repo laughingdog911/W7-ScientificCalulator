@@ -1,11 +1,14 @@
 package com.hj.scientificcalulator.Helper
 
+import androidx.lifecycle.MutableLiveData
+import net.objecthunter.exp4j.ExpressionBuilder
+
 class CalcHelper {
 
     val operatorList = listOf('÷', '×', '-', '+')
     var parentheses = ArrayDeque<String>()
 
-    var calcexpression = //여기에 계산 식을 담아서 evaluate() 함수에 넘겨주기?
+    var calcExpression : String = ""
 
 
 //    fun parenOperation(p: Char) {
@@ -21,17 +24,24 @@ class CalcHelper {
 //        }
 //    }
 
-    fun symbolConverter(op: Char) {
-        when (op) {
-            '×' -> {
-                '*'
-            }
-            '÷' -> {
-                '/'
-            }
-            else -> {
-                op
-            }
-        }
+
+
+    fun symbolConverter(expression: String):String {
+        expression.replace('×', '*')
+        expression.replace('÷', '/')
+
+        return expression
+
     }
+
+
+    fun calculate(): String {
+        calcExpression = symbolConverter(calcExpression).toString()
+        val expressionBuilder = ExpressionBuilder(calcExpression).build()
+        val calcResult = expressionBuilder.evaluate().toString()
+        return calcResult
+
+    }
+
+
 }

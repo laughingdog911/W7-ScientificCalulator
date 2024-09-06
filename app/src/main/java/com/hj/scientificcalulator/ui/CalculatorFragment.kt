@@ -1,6 +1,7 @@
 package com.hj.scientificcalulator.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.hj.scientificcalulator.Helper.HistoryHelper
 import com.hj.scientificcalulator.R
 import com.hj.scientificcalulator.databinding.FragmentCalculatorBinding
 import net.objecthunter.exp4j.ExpressionBuilder
+import kotlin.math.exp
 
 class CalculatorFragment(): Fragment(){
     private lateinit var binding: FragmentCalculatorBinding
@@ -35,7 +37,8 @@ class CalculatorFragment(): Fragment(){
         return binding.root
     }
 
-    fun showToast(text: String){
+
+    private fun showToast(text: String){
         Toast.makeText(context as MainActivity, text, Toast.LENGTH_SHORT).show()
     }
 
@@ -46,9 +49,7 @@ class CalculatorFragment(): Fragment(){
             null
         }
     }
-
     private fun opBtnClicked(op: Char){
-
         if(expression.value!!.isNotEmpty()){
             for(o in calcHelper.operatorList){
                 if(getLast(expression.value!!) == o){
@@ -56,6 +57,7 @@ class CalculatorFragment(): Fragment(){
                     break
                 }
             }
+
             expression.value = "${expression.value!!}$op"
             result.value = "0"
         } else{
@@ -77,6 +79,7 @@ class CalculatorFragment(): Fragment(){
         }
     }
 
+
     private fun calc(){
         if(expression.value!!.isNotEmpty() && expression.value!![expression.value!!.length - 1] in calcHelper.operatorList){
             showToast("Incomplete Input.")
@@ -84,9 +87,11 @@ class CalculatorFragment(): Fragment(){
             showToast("Incorrect Input.")
         }else{
             historyHelper.addHistory(expression.toString(), result.toString())
-            expression.value = "${expression.value!!}${"="} "
-            val expressionBuilder = ExpressionBuilder("${expression.value}").build()
-            result.value = expressionBuilder.evaluate().toString()
+            calcHelper.calcExpression = expression.value.toString()
+            expression.value = "${expression.value!!}= "
+            result.value = calcHelper.calculate()
+
+
         }
     }
 
@@ -96,7 +101,7 @@ class CalculatorFragment(): Fragment(){
             binding.btnHistory -> {
                 val transactionManager =
                     (activity as MainActivity).supportFragmentManager.beginTransaction()
-                transactionManager.replace(R.id.calculatorView, HistoryFragment()).addToBackStack("").commit()
+                transactionManager.replace(R.id.main, HistoryFragment()).addToBackStack("").commit()
             }
 
             binding.btnAc -> {
@@ -106,7 +111,9 @@ class CalculatorFragment(): Fragment(){
 
             binding.btnDelete -> {
                 if(expression.value!!.isNotEmpty()){
-                    if(result.value!!.isNotEmpty() && result.value!![result.value!!.length - 1] == expression.value!![expression.value!!.length - 1]){
+                    if(result.value!!.isNotEmpty()
+                        && result.value!![result.value!!.length - 1]
+                            == expression.value!![expression.value!!.length - 1]){
                         result.value = result.value?.substring(0, result.value!!.length - 1)
                     }
 
@@ -115,19 +122,16 @@ class CalculatorFragment(): Fragment(){
             }
 
 
-            binding.btnMinus, binding.btnPlus -> {
+            binding.btnMinus, binding.btnPlus, binding.btnDivide, binding.btnMultiply -> {
                 opBtnClicked((v as MaterialButton).text[0])
-            }
-            binding.btnDivide ->{
-                opBtnClicked('÷')
-            }
-            binding.btnMultiply ->{
-                opBtnClicked('×')
+
             }
 
             binding.btnPoint -> {
-                if(expression.value!!.isNotEmpty() && expression.value!![expression.value!!.length - 1] != '.'){
-                    opBtnClicked('.')
+                if(expression.value!!.isNotEmpty()
+                    && expression.value!![expression.value!!.length - 1] != '.'
+                    && !result.value!!.contains('.')){
+                    expression.value += "."
                     result.value += "."
                 } else if(expression.value!!.isEmpty()){
                     expression.value = "0."
@@ -139,15 +143,15 @@ class CalculatorFragment(): Fragment(){
                 calc()
             }
 
-//            binding.btnOpenParenthesis -> {
-//                parenBtnClicked('(')
+            binding.btnOpenParenthesis -> {
+                parenBtnClicked('(')
 //                calcHelper.parenOperation('(')
-//            }
+            }
 //
-//            binding.btnCloseParenthesis -> {
-//                parenBtnClicked(')')
+            binding.btnCloseParenthesis -> {
+                parenBtnClicked(')')
 //                calcHelper.parenOperation(')')
-//            }
+            }
 
             else -> {
                 if(expression.value!!.isNotEmpty()){
