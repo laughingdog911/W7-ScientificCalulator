@@ -11,7 +11,7 @@ class HistoryListAdapter() :
     RecyclerView.Adapter<HistoryListAdapter.ViewHolder>() {
 
     inner class ViewHolder(
-        val binding: PastCalcBinding
+        private val binding: PastCalcBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(historyDataModel: HistoryDataModel) {
             binding.historyXprsn.text = historyDataModel.expression

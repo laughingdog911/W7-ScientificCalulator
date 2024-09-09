@@ -14,4 +14,8 @@ class HistoryHelper {
     fun addHistory(expression: String, result: String){
         historyList.value?.add(HistoryDataModel(expression, result))
     }
+
+    fun clearHistory(){
+        historyList.value?.clear()
+    }
 }

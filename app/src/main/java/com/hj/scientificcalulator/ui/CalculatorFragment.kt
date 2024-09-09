@@ -58,9 +58,9 @@ class CalculatorFragment() : Fragment() {
                     break
                 }
             }
-
             expression.value = "${expression.value!!}$op"
             result.value = "0"
+//indice 변수에다 넣어서 핸들링...
         } else {
             expression.value = "0$op"
         }
@@ -89,10 +89,9 @@ class CalculatorFragment() : Fragment() {
             calcHelper.calcExpression = expression.value.toString()
             expression.value = "${expression.value!!}= "
             result.value = calcHelper.calculate()
-
-
-        }
+        } // 다른 함수 생성? 여기서 새로운 계산을 다시 시작하도록....?
     }
+
 
 
     fun onClick(v: View) {
@@ -112,13 +111,11 @@ class CalculatorFragment() : Fragment() {
                 if (expression.value!!.isNotEmpty()) {
                     if (result.value!!.isNotEmpty()
                         && result.value!![result.value!!.length - 1]
-                        == expression.value!![expression.value!!.length - 1]
-                    ) {
-                        //index 매겨서 인덱스 앞에 있는 애들만 불러와서 지워주기
+                        == expression.value!![expression.value!!.length - 1]) {
                         result.value = result.value?.substring(0, result.value!!.length - 1)
+                    }else if (expression.value!![expression.value!!.length - 1] in calcHelper.operatorList) {
+                        expression.value = expression.value?.substring(0, expression.value!!.length - 1)
                     }
-
-                    expression.value = expression.value?.substring(0, expression.value!!.length - 1)
                 }
             }
 
@@ -143,6 +140,7 @@ class CalculatorFragment() : Fragment() {
 
             binding.btnEqual -> {
                 calc()
+
             }
 
             binding.btnOpenParenthesis -> {

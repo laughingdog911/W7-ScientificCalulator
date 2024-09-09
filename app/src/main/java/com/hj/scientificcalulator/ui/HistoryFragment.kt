@@ -34,22 +34,20 @@ class HistoryFragment() : Fragment() {
         return binding.root
     }
 
-    private fun inHistoryRecyclerView(){
+    private fun inHistoryRecyclerView() {
         adapter = HistoryListAdapter()
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context as MainActivity)
 
     }
 
-    fun onClick(v: View){
+    fun onClick(v: View) {
 
         when (v) {
             binding.btnBin -> {
-                historyHelper.historyList.value?.let{
-                    it.clear()
-                }
+                historyHelper.clearHistory()
+                adapter.notifyDataSetChanged()
             }
-
             binding.btnBack -> {
                 (activity as MainActivity).supportFragmentManager.popBackStack()
             }

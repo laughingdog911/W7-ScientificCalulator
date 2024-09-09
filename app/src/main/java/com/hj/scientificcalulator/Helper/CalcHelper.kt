@@ -6,6 +6,7 @@ class CalcHelper {
 
     val operatorList = listOf('÷', '×', '-', '+')
 
+    val operatorIndex = mutableListOf<Int>()
     var calcExpression : String = ""
 
     private fun symbolConverter(expression: String):String {
@@ -17,7 +18,7 @@ class CalcHelper {
     }
 
     fun calculate(): String {
-        calcExpression = symbolConverter(calcExpression).toString()
+        calcExpression = symbolConverter(calcExpression)
         val expressionBuilder = ExpressionBuilder(calcExpression).build()
         val calcResult = expressionBuilder.evaluate().toString()
         return calcResult
