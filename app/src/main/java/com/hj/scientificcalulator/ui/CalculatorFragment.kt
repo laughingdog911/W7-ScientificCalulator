@@ -26,6 +26,7 @@ class CalculatorFragment() : Fragment() {
     var result = MutableLiveData("0")
     var expression = MutableLiveData("")
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,7 +61,6 @@ class CalculatorFragment() : Fragment() {
             }
             expression.value = "${expression.value!!}$op"
             result.value = "0"
-//indice 변수에다 넣어서 핸들링...
         } else {
             expression.value = "0$op"
         }
@@ -85,13 +85,12 @@ class CalculatorFragment() : Fragment() {
         } else if (expression.value!!.contains("/0")) {
             showToast("Incorrect Input.")
         } else {
-            historyHelper.addHistory(expression.toString(), result.toString())
+            historyHelper.addHistory(expression.value.toString(), result.value.toString())
             calcHelper.calcExpression = expression.value.toString()
             expression.value = "${expression.value!!}= "
             result.value = calcHelper.calculate()
-        } // 다른 함수 생성? 여기서 새로운 계산을 다시 시작하도록....?
+        }
     }
-
 
 
     fun onClick(v: View) {
@@ -111,10 +110,13 @@ class CalculatorFragment() : Fragment() {
                 if (expression.value!!.isNotEmpty()) {
                     if (result.value!!.isNotEmpty()
                         && result.value!![result.value!!.length - 1]
-                        == expression.value!![expression.value!!.length - 1]) {
+                        == expression.value!![expression.value!!.length - 1]
+                    ) {
                         result.value = result.value?.substring(0, result.value!!.length - 1)
-                    }else if (expression.value!![expression.value!!.length - 1] in calcHelper.operatorList) {
+                    } else if (expression.value!![expression.value!!.length - 1] in calcHelper.operatorList) {
                         expression.value = expression.value?.substring(0, expression.value!!.length - 1)
+                        calcHelper.getOpIndices(expression.value.toString())
+                        result.value = calcHelper.getLastNo(expression.value.toString())
                     }
                 }
             }
@@ -158,6 +160,9 @@ class CalculatorFragment() : Fragment() {
                             result.value = "0"
                         }
                     }
+                }else if(expression.value!!.contains('=')){
+                    expression.value = ""
+                    result.value = "0"
                 }
 
                 val id = v.resources.getResourceName(v.id)
